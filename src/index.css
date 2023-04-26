@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    overflow-x: none;
+    -ms-overflow-style: none;
+    font-family: "Epilogue", sans-serif;
+    background-color: #f7f7f7;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  li {
+    @apply px-4;
+    @apply cursor-pointer;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+#gender:first-child {
+  font-size: 100px !important;
+}
+
+.css-y8ay40-MuiTableCell-root,
+.css-i02g0k-MuiTableCell-root {
+  font-weight: 600 !important;
+  font-size: 16px !important;
+}
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  width: 500px;
+}
+
+.css-y8ay40-MuiTableCell-root,
+.css-1ex1afd-MuiTableCell-root,
+.css-177gid-MuiTableCell-root,
+.css-pdct74-MuiTablePagination-selectLabel,
+.css-16c50h-MuiInputBase-root-MuiTablePagination-select,
+.css-levciy-MuiTablePagination-displayedRows {
+  font-family: "Epilogue", sans-serif !important;
+}
+.css-i02g0k-MuiTableCell-root,
+.css-1ex1afd-MuiTableCell-root,
+.css-177gid-MuiTableCell-root {
+  text-align: left !important;
+}
+
+.css-1n8xjfr-MuiFormControl-root {
+  margin: unset !important;
+}
+
+.css-1fw5qro-MuiPaper-root,
+.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+  border-radius: 12px !important;
+}
+.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  font-size: 14px !important;
+}
+.css-1ex1afd-MuiTableCell-root {
+  font-weight: 500 !important;
+}
+
+.active {
+  color: rgb(23, 23, 37);
+  font-weight: 600;
+}
