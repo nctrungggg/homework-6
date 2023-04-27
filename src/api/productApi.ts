@@ -1,3 +1,4 @@
+import { IProductParams } from "../models/product";
 import axiosClient from "./axiosClient";
 
 const productApi = {
@@ -11,12 +12,7 @@ const productApi = {
     return axiosClient.get(url);
   },
 
-  createProduct(data: any) {
-    const url = "product";
-    return axiosClient.post(url, data);
-  },
-
-  updateProduct(data: any) {
+  updateProduct(data: IProductParams) {
     const url = "product";
     return axiosClient.put(url, data);
   },

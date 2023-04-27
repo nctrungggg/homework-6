@@ -8,12 +8,12 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
-interface Props {
+interface ISignInFormProps {
   onSubmitForm(values: ILoginParams): void;
   loading: boolean;
 }
 
-const SignInForm = ({ onSubmitForm, loading }: Props) => {
+const SignInForm = ({ onSubmitForm, loading }: ISignInFormProps) => {
   const { t } = useTranslation("translation");
 
   const schema = Yup.object().shape({

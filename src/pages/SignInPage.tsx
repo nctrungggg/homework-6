@@ -52,7 +52,7 @@ const SignInPage = () => {
   }
 
   return (
-    <div className="flex justify-center p-12">
+    <div className="flex justify-center p-12 pt-16">
       <div className="rounded-xl w-[450px] shadow-md h-[600px] py-10 px-14">
         <h1 className="mb-10 text-3xl font-semibold text-center">
           {t("signIn")}
@@ -61,7 +61,7 @@ const SignInPage = () => {
         <SignInForm onSubmitForm={handleSubmitForm} loading={loading} />
       </div>
 
-      <div className="w-[450px] shadow-xl h-[600px] hidden lg:block">
+      <div className="w-[450px] rounded-xl shadow-xl h-[600px] hidden lg:block">
         <img
           className="object-cover w-full h-full rounded-xl"
           src="https://images.pexels.com/photos/3585089/pexels-photo-3585089.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"

@@ -33,6 +33,7 @@ export const getInfoUser = createAsyncThunk("auth/info", async () => {
   const data = await userApi.getInfoUser();
 
   const userInfo = data.data.data;
+  console.log(userInfo);
 
   return userInfo;
 });
@@ -69,8 +70,10 @@ const authSlice = createSlice({
 
   reducers: {
     logout: (state) => {
-      sessionStorage.removeItem(STORAGE_KEY.TOKEN);
-      sessionStorage.removeItem(STORAGE_KEY.USER);
+      sessionStorage.clear()
+      // sessionStorage.removeItem(STORAGE_KEY.TOKEN);
+      // sessionStorage.removeItem(STORAGE_KEY.USER);
+      // sessionStorage.removeItem(STORAGE_KEY.PRODUCT_LIST);
 
       state.currentUser = null;
     },

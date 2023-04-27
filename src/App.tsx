@@ -5,7 +5,7 @@ import Layout from "./layout/Layout";
 
 function App() {
   return (
-    <div className="relative  pt-15">
+    <div className="relative ">
       <Layout>
         <SelectLang />
         <Router />

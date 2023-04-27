@@ -5,7 +5,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function Modal({ showModal, setShowModal, onDelete, id }: any) {
+interface IModalProps {
+  showModal: boolean;
+  setShowModal: (state: boolean) => void;
+  onDelete: (id: number) => void;
+  id?: number;
+}
+export default function Modal({
+  showModal,
+  setShowModal,
+  onDelete,
+  id,
+}: IModalProps) {
   const handleClose = () => {
     setShowModal(false);
   };
@@ -13,7 +24,7 @@ export default function Modal({ showModal, setShowModal, onDelete, id }: any) {
   const handleDelete = () => {
     setShowModal(false);
 
-    onDelete(id);
+    onDelete(id!);
   };
 
   return (

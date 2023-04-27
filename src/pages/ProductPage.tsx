@@ -12,6 +12,7 @@ import {
 } from "../modules/products/redux/ProductSlice";
 import SignInPage from "./SignInPage";
 import { FitlerProduct } from "../modules/products/components/filterProduct/FilterProduct";
+import { toast } from "react-toastify";
 
 const ProductPage = () => {
   const authToken = sessionStorage.getItem("access_token");
@@ -23,7 +24,6 @@ const ProductPage = () => {
     (state: any) => state.product.filterProduct
   );
 
-
   const [filter, setFilter] = useState({
     status: "",
     client: "",
@@ -33,6 +33,11 @@ const ProductPage = () => {
   });
   const [filteredProducts, setFilteredProducts] = useState(productList);
 
+  if (!authToken) {
+    toast.error("You are not logged in!!");
+    return <Navigate to={ROUTES.login} />;
+  }
+
   // call all product
   useEffect(() => {
     (async () => {
@@ -41,7 +46,7 @@ const ProductPage = () => {
 
       setFilteredProducts(resultAction.payload);
     })();
-  }, [dispatch]);
+  }, []);
 
   // delete product
   const handleDeleteProduct = async (id: number) => {
@@ -61,15 +66,12 @@ const ProductPage = () => {
 
   // select client
   const handleSelectClient = (client: string) => {
-    console.log(client);
-
     setFilter({ ...filter, client: client });
   };
 
   // click apply filter
   const handleFilter = () => {
     if (!filter) return;
-    console.log(123);
 
     dispatch(filterProduct(filter));
   };
@@ -82,12 +84,9 @@ const ProductPage = () => {
     setFilteredProducts(productList);
   };
 
-  if (!authToken)
-    return authToken ? <SignInPage /> : <Navigate to={ROUTES.login} />;
-
   return (
-    <div>
-      <h1 className="text-3xl mb-10">Product</h1>
+    <div className="pt-10">
+      <h1 className="text-5xl font-semibold mb-10">Product</h1>
       <FitlerProduct
         handleSelectClient={handleSelectClient}
         handleSelectStatus={handleSelectStatus}

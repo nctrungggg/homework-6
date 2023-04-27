@@ -9,11 +9,11 @@ import { ICountryParams, ISignUpParams } from "../../../models/auth";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  onSubmitForm(values: any): void;
+  onSubmitForm(values: ISignUpParams): Promise<void>;
   loading: boolean;
   countryList: ICountryParams[];
-  handleFetchCity(id: any): void;
-  cityList: any;
+  handleFetchCity(id: string): void;
+  cityList: ICountryParams;
 }
 
 const SignUpForm = ({
@@ -63,7 +63,7 @@ const SignUpForm = ({
 
   const [disableCity, setDisableCity] = useState(false);
 
-  const handleSignUp = (values: any) => {
+  const handleSignUp = (values: ISignUpParams) => {
     if (!isValid) return;
 
     onSubmitForm(values);

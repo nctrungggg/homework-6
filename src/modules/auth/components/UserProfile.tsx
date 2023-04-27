@@ -1,17 +1,19 @@
+import { unwrapResult } from "@reduxjs/toolkit";
+import axios from "axios";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
+import ReactCrop from "react-image-crop";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../configs/routes";
-import { API_HOST, STORAGE_KEY } from "../../../constants/constants";
+import { STORAGE_KEY } from "../../../constants/constants";
 import SignInPage from "../../../pages/SignInPage";
-import { useDispatch, useSelector } from "react-redux";
-import { getInfoUser, logout } from "../redux/AuthSlice";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
-import ReactCrop from "react-image-crop";
-import { Button, Modal } from "react-bootstrap";
-import { generateAvatarUpload } from "../../../utils/upload";
 import { RESPONSE_STATUS_SUCCESS } from "../../../utils/httpResponseCode";
-import axios from "axios";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { generateAvatarUpload } from "../../../utils/upload";
+import { getInfoUser, logout } from "../redux/AuthSlice";
 import "react-image-crop/dist/ReactCrop.css";
+import userApi from "../../../api/userApi";
+import { toast } from "react-toastify";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -23,9 +25,14 @@ const UserProfile = () => {
   const [image, setImage] = useState(userInfo?.avatar);
   const [openModal, setOpenModal] = useState(false);
   const imgRef = useRef<any>(null);
-  const [crop, setCrop] = useState<any>({ unit: "%", width: 30, aspect: 1 });
+  const [crop, setCrop] = useState<any>();
   const [completedCrop, setCompletedCrop] = useState<any>(null);
   const previewCanvasRef = useRef<any>(null);
+
+  if (!authToken) {
+    toast.error("You are not logged in!!");
+    return <Navigate to={ROUTES.login} />;
+  }
 
   useEffect(() => {
     (async () => {
@@ -46,6 +53,7 @@ const UserProfile = () => {
 
   const onChooseAvatar = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
     const files = e.target.files;
     const reader = new FileReader();
 
@@ -58,9 +66,11 @@ const UserProfile = () => {
     setOpenModal(true);
   };
 
-  const onLoad = useCallback((img: any) => {
+  const onLoad = (img: any) => {
+    console.log(img);
+
     imgRef.current = img;
-  }, []);
+  };
 
   useEffect(() => {
     if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
@@ -74,6 +84,7 @@ const UserProfile = () => {
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
     const ctx = canvas.getContext("2d");
+
     const pixelRatio = window.devicePixelRatio;
 
     canvas.width = crop.width * pixelRatio * scaleX;
@@ -100,6 +111,7 @@ const UserProfile = () => {
       previewCanvasRef.current,
       completedCrop
     );
+    console.log(file);
 
     if (file) {
       const formData = new FormData();
@@ -112,36 +124,35 @@ const UserProfile = () => {
         },
       };
 
-      const json = await axios.put(`${API_HOST}/auth/user`, formData, config);
-      console.log(json);
+      const json = await userApi.updateInfoUser(formData, config);
 
       if (json.data && json.data.code === RESPONSE_STATUS_SUCCESS) {
-        const resultAction = await dispatch<any>(json.data.data);
+        const resultAction = await dispatch<any>(getInfoUser());
+        console.log(resultAction.payload);
+
         unwrapResult(resultAction);
       }
     }
   };
 
-  if (!authToken)
-    return authToken ? <SignInPage /> : <Navigate to={ROUTES.login} />;
-
   return (
-    <>
-      <div className="flex justify-center p-16">
+    <div className="pt-20">
+      <div className="flex justify-center">
         <div className="relative rounded-xl w-[450px] shadow-md h-[600px] py-10 px-14">
-          <h1 className="mb-10 text-3xl font-semibold text-center">Profile</h1>
-          <div className="bg-[#111] mx-auto relative group  w-[200px] h-[200px] mb-10 rounded-full">
+          <h1 className="mb-8 text-5xl font-semibold text-center">Profile</h1>
+
+          <div className="bg-[#111] mx-auto relative group  w-[150px] h-[150px] mb-10 rounded-full">
             <img
               className="w-full h-full transition-all duration-500 object-cover rounded-full group-hover:opacity-[0.5]"
               src={
-                userInfo?.avatar ||
-                "https://images.pexels.com/photos/1624076/pexels-photo-1624076.jpeg?auto=compress&cs=tinysrgb&w=800"
+                userInfo &&
+                `http://api.training.div3.pgtest.co/${userInfo?.avatar}`
               }
               alt="user avatar"
             />
             {location.pathname === ROUTES.profile && (
               <div
-                className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center text-white opacity-0 cursor-pointer group-hover:opacity-100 "
+                className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center text-white opacity-0 cursor-pointer group-hover:!opacity-100 "
                 onClick={changeAvatar}
               >
                 <input
@@ -151,8 +162,8 @@ const UserProfile = () => {
                   onChange={onChooseAvatar}
                   accept="image/*"
                 />
-                <span className="uppercase text-sm w-[50%] text-center">
-                  Upload Avatar
+                <span className="uppercase text-sm font-medium text-center">
+                  Upload
                 </span>
               </div>
             )}
@@ -168,14 +179,14 @@ const UserProfile = () => {
             <p className="text-xl mb-3 font-medium">{userInfo?.gender}</p>
           </div>
           <button
-            className="absolute cursor-pointer bottom-4 right-3 p-2rounded-xl w-[100px] block text-sm  text-slate-600"
+            className="absolute cursor-pointer bottom-4 right-0 p-2rounded-xl w-[100px] block text-sm  text-slate-600"
             onClick={handleLogout}
           >
             Log out
           </button>
         </div>
 
-        <div className="w-[450px] shadow-xl h-[600px] hidden lg:block">
+        <div className="w-[450px] rounded-xl shadow-xl h-[600px] hidden lg:block">
           <img
             className="object-cover w-full h-full rounded-xl"
             src="https://images.pexels.com/photos/3585089/pexels-photo-3585089.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -196,18 +207,15 @@ const UserProfile = () => {
 
           <Modal.Body>
             <ReactCrop
-              src={image ? image : ""}
               crop={crop}
+              src={image || ""}
               onChange={(newCrop: any) => {
-                console.log("====================================");
-                console.log(newCrop);
-                console.log("====================================");
                 setCrop(newCrop);
               }}
               onImageLoaded={onLoad}
               onComplete={(c) => setCompletedCrop(c)}
             >
-              <img src={image} alt="" onLoad={onLoad} />
+              {/* <img src={image} /> */}
             </ReactCrop>
             <div>
               <canvas
@@ -242,7 +250,7 @@ const UserProfile = () => {
           </Modal.Footer>
         </Modal>
       </div>
-    </>
+    </div>
   );
 };
 

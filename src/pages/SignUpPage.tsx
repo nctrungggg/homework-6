@@ -17,35 +17,25 @@ const SignUpPage = () => {
 
   const authToken = sessionStorage.getItem("access_token");
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchCountry = async () => {
-      const action = getCountry();
-
-      const resultAction = await dispatch<any>(action);
+    (async () => {
+      const resultAction = await dispatch(getCountry());
       unwrapResult(resultAction);
-    };
-
-    fetchCountry();
+    })();
   }, []);
 
   const handleFetchCity = async (id: any) => {
-    const action = getCity(id);
-
-    const resultAction = await dispatch<any>(action);
+    const resultAction = await dispatch(getCity(id));
     unwrapResult(resultAction);
   };
 
   const handleSubmitForm = async (values: ISignUpParams) => {
-    console.log("values", values);
-
-    const action = register(values);
-
-    const resultAction = await dispatch<any>(action);
+    const resultAction = await dispatch(register(values));
     unwrapResult(resultAction);
 
     try {
@@ -59,13 +49,13 @@ const SignUpPage = () => {
         });
 
         navigate(ROUTES.home);
-      }, 2000);
+      }, 1500);
     } catch (error: any) {
       setTimeout(() => {
         setLoading(false);
 
         toast.error("Something went wrong!!");
-      }, 2000);
+      }, 1500);
     }
   };
 
@@ -74,7 +64,7 @@ const SignUpPage = () => {
   }
 
   return (
-    <div className="flex justify-center p-12">
+    <div className="flex justify-center p-12 pt-16">
       <div className="rounded-xl w-[450px] shadow-md overflow-auto h-[600px] py-10 px-14">
         <h1 className="mb-10 text-3xl font-semibold text-center">
           {t("signUp")}
@@ -89,7 +79,7 @@ const SignUpPage = () => {
         />
       </div>
 
-      <div className="w-[450px] shadow-xl h-[600px] hidden lg:block">
+      <div className="w-[450px] rounded-xl shadow-xl h-[600px] hidden lg:block">
         <img
           className="object-cover w-full h-full rounded-xl"
           src="https://images.pexels.com/photos/3585089/pexels-photo-3585089.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"

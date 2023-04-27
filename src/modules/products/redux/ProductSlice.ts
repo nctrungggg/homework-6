@@ -49,7 +49,6 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async (data: any) => {
     await productApi.updateProduct(data);
-
     return;
   }
 );

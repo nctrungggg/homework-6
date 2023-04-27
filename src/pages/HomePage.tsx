@@ -1,17 +1,20 @@
 import { Navigate } from "react-router-dom";
 import { ROUTES } from "../configs/routes";
 import SignInPage from "./SignInPage";
+import { toast } from "react-toastify";
 
 type Props = {};
 
 const HomePage = (props: Props) => {
   const authToken = sessionStorage.getItem("access_token");
 
-  if (!authToken)
-    return authToken ? <SignInPage /> : <Navigate to={ROUTES.login} />;
+  if (!authToken) {
+    toast.error("You are not logged in!!");
+    return <Navigate to={ROUTES.login} />;
+  }
 
   return (
-    <div className="p-20">
+    <div className="p-12 pt-16 px-20">
       <div className="flex justify-between">
         <div className="max-w-[500px]">
           <h1 className="text-5xl font-semibold text-center mb-5">Home Page</h1>
@@ -28,9 +31,9 @@ const HomePage = (props: Props) => {
             eaque debitis necessitatibus itaque?
           </p>
         </div>
-        <div className="h-[600px] w-[500px]">
+        <div className="h-[600px] w-[500px] rounded-xl">
           <img
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover rounded-xl"
             src="https://images.pexels.com/photos/4132651/pexels-photo-4132651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
             alt=""
           />
