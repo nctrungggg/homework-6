@@ -38,6 +38,10 @@ const ProductPage = () => {
     return <Navigate to={ROUTES.login} />;
   }
 
+  useEffect(() => {
+    setFilteredProducts(productList);
+  }, [productList]);
+
   // call all product
   useEffect(() => {
     (async () => {
